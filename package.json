@@ -1,8 +1,8 @@
 {
   "name": "shareworks-formbuilder",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "Shareworks Form Builder",
-  "main": "dist/form-builder.min.js",
+  "main": "index.js",
   "bugs":"",
   "files": [
     "dist/form-builder.js",
@@ -34,6 +34,12 @@
         "fonts": "src/fonts/fontello",
         "sass": [
           "src/sass/form-builder.scss"
+        ]
+      },
+	  "formRender": {
+        "js": "src/js/form-render.js",
+        "sass": [
+          "src/sass/form-render.scss"
         ]
       }
     }

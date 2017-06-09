@@ -42,7 +42,8 @@ const devtool = PRODUCTION ? false : 'source-map';
 const webpackConfig = {
   context: resolve(__dirname, 'demo/assets/js/'),
   entry: {
-    'form-builder': resolve(__dirname, pkg.config.files.formBuilder.js)
+    'form-builder': resolve(__dirname, pkg.config.files.formBuilder.js),
+	'form-render': resolve(__dirname, pkg.config.files.formRender.js)
   },
   output: {
     path: resolve(__dirname, 'demo/assets/js/'),
