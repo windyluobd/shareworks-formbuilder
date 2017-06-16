@@ -21,7 +21,7 @@ export default class control {
     delete config.isPreview;
 
     // process config - extract standard properties
-    let properties = ['label', 'description', 'subtype', 'required', 'api'];
+    let properties = ['label', 'description', 'subtype', 'required', 'api', 'show', 'system'];
     for (let prop of properties) {
       this[prop] = config[prop];
       delete config[prop];
@@ -269,6 +269,36 @@ export default class control {
 			return def.api[type];
 		}
 		return def.api;
+	}
+
+	/**
+	* Retrieve the show for a control type
+	* @param {String} type
+	* @return {String} icon
+	*/
+	static show(type) {
+		// @todo - support for `icon-${attr.name}` - is this for inputSets? Doesnt look like it but can't see anything else that sets attr.name?
+		// http://formbuilder.readthedocs.io/en/latest/formBuilder/options/inputSets/
+		let def = this.definition;
+		if (def && typeof def.show === 'object') {
+			return def.show[type];
+		}
+		return true;
+	}
+
+	/**
+	* Retrieve the api for a control type
+	* @param {String} type
+	* @return {String} icon
+	*/
+	static system(type) {
+		// @todo - support for `icon-${attr.name}` - is this for inputSets? Doesnt look like it but can't see anything else that sets attr.name?
+		// http://formbuilder.readthedocs.io/en/latest/formBuilder/options/inputSets/
+		let def = this.definition;
+		if (def && typeof def.system === 'object') {
+			return def.system[type];
+		}
+		return false;
 	}
 
   /**

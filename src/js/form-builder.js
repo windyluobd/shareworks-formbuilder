@@ -86,6 +86,7 @@ const FormBuilder = function(opts, element) {
     let icon = controlClass.icon(type);
     let label = controlClass.label(type);
     let iconClassName = !icon ? `icon-${type}` : '';
+	let show = controlClass.show(type);
 
     // if the class has specified a custom icon, inject it into the label
     if (icon) {
@@ -95,7 +96,7 @@ const FormBuilder = function(opts, element) {
     // build & insert the new list item to represent this control
     let newFieldControl = m('li',
       m('span', label),
-      {className: `${iconClassName} input-control input-control-${controlIndex}`}
+      {className: `${iconClassName} input-control input-control-${controlIndex}`, style: show ? '' : 'display:none;'}
     );
     newFieldControl.dataset.type = type;
     $(newFieldControl).appendTo(initObject);
@@ -144,35 +145,6 @@ const FormBuilder = function(opts, element) {
       'button'
     ].join(', '),
     placeholder: 'frmb-placeholder',
-  });
-
-  // ControlBox with different fields
-  $cbUL.sortable({
-    helper: 'clone',
-    opacity: 0.9,
-    connectWith: $stage,
-    cancel: '.fb-separator',
-    cursor: 'move',
-    scroll: false,
-    placeholder: 'ui-state-highlight',
-    start: (evt, ui) => h.startMoving.call(h, evt, ui),
-    stop: (evt, ui) => h.stopMoving.call(h, evt, ui),
-    revert: 150,
-    beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
-    distance: 3,
-    update: function(event, ui) {
-      if (h.doCancel) {
-        return false;
-      }
-
-      if (ui.item.parent()[0] === d.stage) {
-        h.doCancel = true;
-        processControl(ui.item);
-      } else {
-        h.setFieldOrder($cbUL);
-        h.doCancel = !opts.sortableControls;
-      }
-    }
   });
 
   let processControl = control => {
@@ -454,7 +426,9 @@ const FormBuilder = function(opts, element) {
       'name',
       'access',
       'value',
-		'api'
+		'api',
+		'show',
+		'system'
     ];
     let noValFields = [
       'header',
@@ -574,7 +548,9 @@ const FormBuilder = function(opts, element) {
         return boolAttribute('inline', values, labels);
       },
       label: () => textAttribute('label', values),
-		api: () => textAttribute('api', values),
+		api: () => '',
+		show: () => '',
+		system: () => '',
       description: () => textAttribute('description', values),
       subtype: () => selectAttribute('subtype', values, subtypes[type]),
       style: () => btnStyles(values.style),
@@ -1006,6 +982,7 @@ const FormBuilder = function(opts, element) {
   let appendNewField = function(values, isNew = true, actionTag = true) {
     let type = values.type || 'text';
     let label = values.label || i18n[type] || i18n.label;
+	let system = values.system ? values.system : false;
     let delBtn = m('a', i18n.remove, {
         id: 'del_' + data.lastID,
         className: 'del-button btn delete-confirm',
@@ -1021,12 +998,22 @@ const FormBuilder = function(opts, element) {
       className: 'copy-button btn icon-copy',
       title: i18n.copyButtonTooltip
     });
+	let systemInfo = m('span', i18n.systemTagInfo, {
+      id: data.lastID + '-system-info',
+      className: 'field-system-info',
+		style: 'float:right',
+      title: i18n.systemTagInfo
+    });
 
     let liContents = '';
-	if (actionTag) {
-		liContents = m('div', [toggleBtn, copyBtn, delBtn], {className: 'field-actions'}).outerHTML;
+	if (system) {
+		liContents = m('div', [systemInfo], {className: ''}).outerHTML;
 	} else {
-		liContents = m('div', [delBtn], {className: 'field-actions'}).outerHTML;
+		if (actionTag) {
+			liContents = m('div', [toggleBtn, copyBtn, delBtn], {className: 'field-actions'}).outerHTML;
+		} else {
+			liContents = m('div', [delBtn], {className: 'field-actions'}).outerHTML;
+		}
 	}
 
     liContents += m('label', utils.parsedHtml(label), {

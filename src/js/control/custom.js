@@ -17,7 +17,9 @@ export default class controlCustom extends control {
       controlCustom.def = {
         icon: {},
         i18n: {},
-		api: {}
+		api: {},
+		show: {},
+		system: {}
       };
     }
 
@@ -51,6 +53,8 @@ export default class controlCustom extends control {
       controlCustom.def.i18n[locale][type] = field.label;
       controlCustom.def.icon[type] = field.icon;
 		controlCustom.def.api[type] = field.api;
+		controlCustom.def.show[type] = field.show;
+		controlCustom.def.system[type] = field.system;
     }
 
     // register each defined template against this class
@@ -77,7 +81,7 @@ export default class controlCustom extends control {
 
     // restore fieldData config structure for backwards compatibility
     let fieldData = Object.assign(this.config);
-    let properties = ['label', 'description', 'subtype', 'id', 'isPreview', 'required', 'title', 'aria-required', 'type', 'api'];
+    let properties = ['label', 'description', 'subtype', 'id', 'isPreview', 'required', 'title', 'aria-required', 'type', 'api', 'show', 'system'];
     for (let prop of properties) {
       fieldData[prop] = this.config[prop] || this[prop];
     }
