@@ -548,7 +548,7 @@ const FormBuilder = function(opts, element) {
         return boolAttribute('inline', values, labels);
       },
       label: () => textAttribute('label', values),
-		api: () => '',
+		api: () => textAttribute('api', values),
 		show: () => '',
 		system: () => '',
       description: () => textAttribute('description', values),
@@ -945,6 +945,8 @@ const FormBuilder = function(opts, element) {
       let visibility = 'block';
       if (attribute === 'value') {
         visibility = values.subtype && values.subtype === 'quill' && 'none';
+      } else if (attribute === 'api') {
+		visibility = 'none';
       }
 
       attributefield = m('div', [attributeLabel, inputWrap], {
