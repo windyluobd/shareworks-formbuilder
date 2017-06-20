@@ -930,7 +930,9 @@ const FormBuilder = function(opts, element) {
       let attributeLabel = m('label', attrLabel, {
         for: inputConfig.id
       }).outerHTML;
-
+		if (attribute === 'name') {
+			inputConfig.disabled = 'disabled';
+		}
       if (attribute === 'label') {
         inputConfig.contenteditable = true;
         attributefield += m('div', attrVal, inputConfig).outerHTML;
@@ -1064,7 +1066,7 @@ const FormBuilder = function(opts, element) {
     .sortable({update: () => h.updatePreview($li)});
 
     // generate the control, insert it into the list item & add it to the stage
-    h.updatePreview($li);
+    h.updatePreview($li, system);
 
     if (opts.typeUserEvents[type] && opts.typeUserEvents[type].onadd) {
       opts.typeUserEvents[type].onadd(field);

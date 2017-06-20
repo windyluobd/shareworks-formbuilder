@@ -333,8 +333,9 @@ export default class Helpers {
   /**
    * Collect field attribute values and call fieldPreview to generate preview
    * @param  {Object} $field jQuery DOM element
+   * @param {Boolean} system
    */
-  updatePreview($field) {
+  updatePreview($field, system = false) {
     let _this = this;
     let d = this.d;
     const fieldClass = $field.attr('class');
@@ -356,6 +357,9 @@ export default class Helpers {
     if (style) {
       previewData.style = style;
     }
+	if (system) {
+		previewData.disabled = 'disabled';
+	}
 
     if (fieldType.match(d.optionFieldsRegEx)) {
       previewData.values = [];
