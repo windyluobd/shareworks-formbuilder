@@ -19,7 +19,8 @@ export default class controlCustom extends control {
         i18n: {},
 		api: {},
 		show: {},
-		system: {}
+		system: {},
+		notedit: {}
       };
     }
 
@@ -55,6 +56,7 @@ export default class controlCustom extends control {
 		controlCustom.def.api[type] = field.api;
 		controlCustom.def.show[type] = field.show;
 		controlCustom.def.system[type] = field.system;
+		controlCustom.def.notedit[type] = field.notedit;
     }
 
     // register each defined template against this class
@@ -81,7 +83,7 @@ export default class controlCustom extends control {
 
     // restore fieldData config structure for backwards compatibility
     let fieldData = Object.assign(this.config);
-    let properties = ['label', 'description', 'subtype', 'id', 'isPreview', 'required', 'title', 'aria-required', 'type', 'api', 'show', 'system'];
+    let properties = ['label', 'description', 'subtype', 'id', 'isPreview', 'required', 'title', 'aria-required', 'type', 'api', 'show', 'system', 'notedit'];
     for (let prop of properties) {
       fieldData[prop] = this.config[prop] || this[prop];
     }

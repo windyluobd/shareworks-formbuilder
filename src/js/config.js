@@ -156,6 +156,8 @@ export const defaultI18n = {
 			show: 'show',
 			system: 'system',
 			systemTagInfo: 'System Field',
+			notedit: 'notedit',
+			noteditInfo: 'noteditInfo',
           richText: 'Rich Text Editor',
           roles: 'Access',
           rows: 'Rows',

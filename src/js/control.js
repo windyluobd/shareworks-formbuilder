@@ -21,7 +21,7 @@ export default class control {
     delete config.isPreview;
 
     // process config - extract standard properties
-    let properties = ['label', 'description', 'subtype', 'required', 'api', 'show', 'system'];
+    let properties = ['label', 'description', 'subtype', 'required', 'api', 'show', 'system', 'notedit'];
     for (let prop of properties) {
       this[prop] = config[prop];
       delete config[prop];
@@ -287,7 +287,7 @@ export default class control {
 	}
 
 	/**
-	* Retrieve the api for a control type
+	* Retrieve the system for a control type
 	* @param {String} type
 	* @return {String} icon
 	*/
@@ -297,6 +297,21 @@ export default class control {
 		let def = this.definition;
 		if (def && typeof def.system === 'object') {
 			return def.system[type];
+		}
+		return false;
+	}
+
+	/**
+	* Retrieve the notedit for a control type
+	* @param {String} type
+	* @return {String} icon
+	*/
+	static notedit(type) {
+		// @todo - support for `icon-${attr.name}` - is this for inputSets? Doesnt look like it but can't see anything else that sets attr.name?
+		// http://formbuilder.readthedocs.io/en/latest/formBuilder/options/inputSets/
+		let def = this.definition;
+		if (def && typeof def.notedit === 'object') {
+			return def.notedit[type];
 		}
 		return false;
 	}

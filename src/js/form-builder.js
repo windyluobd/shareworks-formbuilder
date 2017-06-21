@@ -428,7 +428,8 @@ const FormBuilder = function(opts, element) {
       'value',
 		'api',
 		'show',
-		'system'
+		'system',
+		'notedit'
     ];
     let noValFields = [
       'header',
@@ -463,6 +464,8 @@ const FormBuilder = function(opts, element) {
         'access',
         'other',
         'options',
+		'system',
+		'notedit'
       ],
       text: defaultAttrs.concat([
         'subtype',
@@ -550,7 +553,20 @@ const FormBuilder = function(opts, element) {
       label: () => textAttribute('label', values),
 		api: () => textAttribute('api', values),
 		show: () => '',
-		system: () => '',
+		system: () => {
+			let labels = {
+				first: i18n.system,
+				second: mi18n.get('inlineDesc', type.replace('-group', ''))
+			};
+			return boolAttribute('system', values, labels);
+		},
+		notedit: () => {
+			let labels = {
+				first: i18n.notedit,
+				second: mi18n.get('inlineDesc', type.replace('-group', ''))
+			};
+			return boolAttribute('notedit', values, labels);
+		},
       description: () => textAttribute('description', values),
       subtype: () => selectAttribute('subtype', values, subtypes[type]),
       style: () => btnStyles(values.style),
@@ -788,10 +804,15 @@ const FormBuilder = function(opts, element) {
       right.push(labels.content);
     }
 
-    right = m('div', right, {className: 'input-wrap'}).outerHTML;
+	let visibility = 'block';
+    right = m('div', right, {
+		className: 'input-wrap',
+		style: `display: ${visibility}`
+	}).outerHTML;
 
     return m('div', left.concat(right), {
-      className: `form-group ${name}-wrap`
+      className: `form-group ${name}-wrap`,
+		style: `display: ${visibility}`
     }).outerHTML;
   };
 
@@ -987,6 +1008,7 @@ const FormBuilder = function(opts, element) {
     let type = values.type || 'text';
     let label = values.label || i18n[type] || i18n.label;
 	let system = values.system ? values.system : false;
+	let notedit = values.notedit;
     let delBtn = m('a', i18n.remove, {
         id: 'del_' + data.lastID,
         className: 'del-button btn delete-confirm',
@@ -1005,21 +1027,27 @@ const FormBuilder = function(opts, element) {
 	let systemInfo = m('span', i18n.systemTagInfo, {
       id: data.lastID + '-system-info',
       className: 'field-system-info',
-		style: 'float:right',
       title: i18n.systemTagInfo
+    });
+	let noteditInfo = m('span', i18n.noteditInfo, {
+      id: data.lastID + '-notedit-info',
+      className: 'field-notedit-info',
+      title: i18n.noteditInfo
     });
 
     let liContents = '';
 	if (system) {
-		liContents = m('div', [systemInfo], {className: ''}).outerHTML;
+		liContents += m('div', [systemInfo], {className: 'field-system-div'}).outerHTML;
 	} else {
 		if (actionTag) {
-			liContents = m('div', [toggleBtn, copyBtn, delBtn], {className: 'field-actions'}).outerHTML;
+			liContents += m('div', [toggleBtn, copyBtn, delBtn], {className: 'field-actions'}).outerHTML;
 		} else {
-			liContents = m('div', [delBtn], {className: 'field-actions'}).outerHTML;
+			liContents += m('div', [delBtn], {className: 'field-actions'}).outerHTML;
 		}
 	}
-
+	if (notedit) {
+		liContents += m('div', [noteditInfo], {className: 'field-notedit-div'}).outerHTML;
+	}
     liContents += m('label', utils.parsedHtml(label), {
       className: 'field-label'
     }).outerHTML;
@@ -1207,15 +1235,6 @@ const FormBuilder = function(opts, element) {
       return false;
     }
   });
-  $stage.on('dblclick', 'li.form-field, .field-label', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (e.handled !== true) {
-      let targetID = e.target.tagName == 'li' ? $(e.target).attr('id') : $(e.target).closest('li.form-field').attr('id');
-      h.toggleEdit(targetID);
-      e.handled = true;
-    }
-  });
 
   $stage.on('change', '[name="subtype"]', (e) => {
     const $field = $(e.target).closest('li.form-field');
@@ -1290,6 +1309,18 @@ let stageOnChangeSelectors = [
         closestToolTip.css('display', 'none');
       }
     }
+  });
+
+  // update preview for description
+  $stage.on('change', 'input[name="notedit"]', function(e) {
+    let $field = $(e.target).parents('.form-field:eq(0)');
+	let value = $(e.target).prop('checked');
+	if (value) {
+		let tt = `<div class="field-notedit-div"><span class="field-notedit-info" title="${i18n.noteditInfo}">${i18n.noteditInfo}</span></div>`;
+		$('.field-actions', $field).before(tt);
+	} else {
+		$('.field-notedit-div', $field).remove();
+	}
   });
 
   /**

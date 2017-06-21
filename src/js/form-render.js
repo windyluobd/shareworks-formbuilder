@@ -27,6 +27,7 @@ class FormRender {
       container: false,
       dataType: 'json',
       formData: false,
+		disabledAttrs: {},
       // subtypes: defaultSubtypes, // @todo - removed this - is it needed now?
       messages: {
         formRendered: 'Form Rendered',
@@ -150,6 +151,17 @@ class FormRender {
       let engine = new opts.layout(opts.layoutTemplates);
       for (let i = 0; i < opts.formData.length; i++) {
         let fieldData = opts.formData[i];
+		let appendTag = true;
+		let attr = '';
+		for (attr in this.options.disabledAttrs) {
+			if (fieldData[attr] != undefined && fieldData[attr] === this.options.disabledAttrs[attr]) {
+				appendTag = false;
+				break;
+			}
+		}
+		if (!appendTag) {
+			continue;
+		}
         let sanitizedField = santizeField(fieldData);
         // let type = fieldData.subtype || fieldData.type;
 
